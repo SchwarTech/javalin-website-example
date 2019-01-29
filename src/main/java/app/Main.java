@@ -20,7 +20,10 @@ public class Main {
     public static UserDao userDao;
 
     public static void main(String[] args) {
+        Main.initialize();
+    }
 
+    public static void initialize() {
         // Instantiate your dependencies
         bookDao = new BookDao();
         userDao = new UserDao();

@@ -1,0 +1,39 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: CC Javalin Services - com.corpcreations::Javalin-services
+
+Parameters:
+  CcEnvironment:
+    Type: String
+#    Default: PROD
+    Default: STAGING
+    Description: CC Javalin environment used for Javalining services
+
+Resources:
+  JavalinServicesFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: app.aws.StreamLambdaHandler::handleRequest
+      Runtime: java8
+      Environment:
+        Variables:
+          CC_ENVIRONMENT: !Ref 'CcEnvironment'
+      CodeUri: target/javalin-website-example-1.0-jar-with-dependencies.jar
+      MemorySize: 256
+      Policies:
+      - AWSLambdaBasicExecutionRole
+#      - AmazonEC2FullAccess
+      Timeout: 60
+      Events:
+        GetResource:
+          Type: Api
+          Properties:
+            Path: /{proxy+}
+            Method: any
+
+Outputs:
+  JavalinServicesFunctionApi:
+    Description: URL for application
+    Value: !Sub 'https://${JavalinServicesFunction}.execute-api.${AWS::Region}.amazonaws.com/Prod'
+    Export:
+      Name: JavalinServicesFunction

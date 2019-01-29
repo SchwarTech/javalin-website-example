@@ -1,0 +1,3 @@
+mvn package
+./bin/uploadToS3
+./bin/deployToAws
